@@ -151,3 +151,4 @@ C:\Users\Student\Desktop\RaceDay\RaceDay.Tests\obj\Debug\net9.0\refint\RaceDay.T
 C:\Users\Student\Desktop\RaceDay\RaceDay.Tests\obj\Debug\net9.0\RaceDay.Tests.pdb
 C:\Users\Student\Desktop\RaceDay\RaceDay.Tests\obj\Debug\net9.0\RaceDay.Tests.genruntimeconfig.cache
 C:\Users\Student\Desktop\RaceDay\RaceDay.Tests\obj\Debug\net9.0\ref\RaceDay.Tests.dll
+C:\Users\Student\Desktop\RaceDay\RaceDay.Tests\obj\Debug\net9.0\RaceDay.Tests.sourcelink.json

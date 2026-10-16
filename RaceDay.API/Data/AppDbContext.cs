@@ -9,7 +9,7 @@ namespace RaceDay.API.Data
         {
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; } = null!;
         public DbSet<Event> Events { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Enrolment> Enrolments { get; set; }
@@ -22,7 +22,7 @@ namespace RaceDay.API.Data
             // Prevent cascading delete cycles on foreign keys
             modelBuilder.Entity<Enrolment>()
                 .HasOne(e => e.Participant)
-                .WithMdotnet ef migrations removeany()
+                .WithMany()
                 .HasForeignKey(e => e.ParticipantId)
                 .OnDelete(DeleteBehavior.Restrict);
 

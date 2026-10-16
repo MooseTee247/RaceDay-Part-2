@@ -154,3 +154,4 @@ C:\Users\Student\Desktop\RaceDay\RaceDay.API\obj\Debug\net9.0\ref\RaceDay.API.dl
 C:\Users\Student\Desktop\RaceDay\RaceDay.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\Student\Desktop\RaceDay\RaceDay.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\Student\Desktop\RaceDay\RaceDay.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\Student\Desktop\RaceDay\RaceDay.API\obj\Debug\net9.0\RaceDay.API.sourcelink.json
