@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using RaceDay.Web.Models;
 
 namespace RaceDay.Web.Controllers
 {

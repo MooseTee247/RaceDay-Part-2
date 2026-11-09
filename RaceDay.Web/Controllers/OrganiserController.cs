@@ -1,0 +1,100 @@
+using Microsoft.AspNetCore.Mvc;
+using RaceDay.Web.Models;
+
+namespace RaceDay.Web.Controllers
+{
+    public class OrganiserController : Controller
+    {
+        private readonly IHttpClientFactory _clientFactory;
+
+        public OrganiserController(IHttpClientFactory clientFactory)
+        {
+            _clientFactory = clientFactory;
+        }
+
+        private bool IsOrganiser()
+        {
+            return HttpContext.Session.GetString("UserRole") == "Organiser";
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Dashboard()
+        {
+            if (!IsOrganiser()) return RedirectToAction("Login", "Account");
+
+            var client = _clientFactory.CreateClient("RaceDayAPI");
+            var events = await client.GetFromJsonAsync<List<EventDto>>("api/events") ?? new List<EventDto>();
+
+            return View(events);
+        }
+
+        [HttpGet]
+        public IActionResult CreateEvent()
+        {
+            if (!IsOrganiser()) return RedirectToAction("Login", "Account");
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateEvent(EventCreateViewModel model, IFormFile bannerImage)
+        {
+            if (!IsOrganiser()) return RedirectToAction("Login", "Account");
+
+            var client = _clientFactory.CreateClient("RaceDayAPI");
+
+            // 1. Upload Banner Image via API (Blob Storage) if provided
+            if (bannerImage != null && bannerImage.Length > 0)
+            {
+                using var content = new MultipartFormDataContent();
+                using var stream = bannerImage.OpenReadStream();
+                content.Add(new StreamContent(stream), "file", bannerImage.FileName);
+
+                var uploadResponse = await client.PostAsync("api/uploads/image", content);
+                if (uploadResponse.IsSuccessStatusCode)
+                {
+                    var result = await uploadResponse.Content.ReadFromJsonAsync<UploadResultDto>();
+                    model.BannerUrl = result?.Url;
+                }
+            }
+
+            // 2. Post Event Data to API
+            var response = await client.PostAsJsonAsync("api/events", model);
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Dashboard");
+            }
+
+            ViewBag.Error = "Failed to create event.";
+            return View(model);
+        }
+    }
+
+    public class EventDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public DateTime Date { get; set; }
+        public string Location { get; set; } = string.Empty;
+        public string Distance { get; set; } = string.Empty;
+        public string EventType { get; set; } = string.Empty;
+        public string? BannerUrl { get; set; }
+        public int TotalEnrolments { get; set; }
+    }
+
+    public class EventCreateViewModel
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public DateTime Date { get; set; }
+        public string Location { get; set; } = string.Empty;
+        public string Distance { get; set; } = string.Empty;
+        public string EventType { get; set; } = string.Empty;
+        public string? BannerUrl { get; set; }
+    }
+
+    public class UploadResultDto
+    {
+        public string Url { get; set; } = string.Empty;
+    }
+}
