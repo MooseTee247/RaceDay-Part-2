@@ -1,0 +1,42 @@
+@model IEnumerable<RaceDay.Web.Controllers.EventDto>
+@{
+    ViewData["Title"] = "Browse Events";
+}
+
+<div class="mb-4">
+    <h2 class="fw-bold">Upcoming Race Events</h2>
+    <p class="text-muted">Choose an event below to view details and register your entry.</p>
+</div>
+
+<div class="row">
+    @if (!Model.Any())
+    {
+        <div class="col-12 text-center text-muted py-5">
+            <p class="fs-5">No upcoming events available at the moment.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (var ev in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    @if (!string.IsNullOrEmpty(ev.BannerUrl))
+                    {
+                        <img src="@ev.BannerUrl" class="card-img-top" alt="@ev.Name" style="height: 180px; object-fit: cover;" />
+                    }
+                    else
+                    {
+                        <div class="bg-secondary text-white text-center py-5">No Image</div>
+                    }
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold">@ev.Name</h5>
+                        <p class="card-text text-muted small mb-2">📍 @ev.Location | 📅 @ev.Date.ToString("yyyy-MM-dd")</p>
+                        <p class="card-text small text-secondary flex-grow-1">@ev.Description</p>
+                        <a asp-action="Details" asp-route-id="@ev.Id" class="btn btn-outline-primary w-100 fw-bold mt-3">View & Enrol</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

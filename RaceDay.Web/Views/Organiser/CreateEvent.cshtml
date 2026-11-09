@@ -1,0 +1,65 @@
+@{
+    ViewData["Title"] = "Create Event";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-7">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h3 class="card-title text-center mb-4 fw-bold text-success">Create New Race Event</h3>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger text-center" role="alert">
+                        @ViewBag.Error
+                    </div>
+                }
+
+                <form asp-action="CreateEvent" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Event Name</label>
+                        <input type="text" name="Name" class="form-control" placeholder="e.g. Soweto Spring Marathon" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Description</label>
+                        <textarea name="Description" class="form-control" rows="3" placeholder="Provide details about the race..." required></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Date</label>
+                            <input type="datetime-local" name="Date" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Location</label>
+                            <input type="text" name="Location" class="form-control" placeholder="e.g. Johannesburg" required />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Distance</label>
+                            <input type="text" name="Distance" class="form-control" placeholder="e.g. 10km or 21.1km" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Event Type</label>
+                            <input type="text" name="EventType" class="form-control" placeholder="e.g. Road Running" required />
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Event Banner Image (Azure Blob Upload)</label>
+                        <input type="file" name="bannerImage" class="form-control" accept="image/*" />
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 py-2 fw-bold">Publish Event</button>
+                </form>
+
+                <div class="text-center mt-3">
+                    <a asp-action="Dashboard" class="text-decoration-none text-muted small">← Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
