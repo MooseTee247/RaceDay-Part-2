@@ -1,4 +1,4 @@
-# RaceDay API - Part 2 Backend Implementation
+# RaceDay API - Part 2 Updated (POE Part 3)
 
 ## Project Overview
 RaceDay is an ASP.NET Core Web API built with Entity Framework Core 9.0 and SQL Server LocalDB. It provides RESTful endpoints for managing race events, participant registrations, categories, and results.
@@ -35,3 +35,12 @@ RaceDay is an ASP.NET Core Web API built with Entity Framework Core 9.0 and SQL 
    ```bash
    git clone <YOUR_GITHUB_REPO_URL>
    cd RaceDay
+# RaceDay Platform - Part 3
+
+## Running with Docker
+
+To build and run the Web application container locally, execute the following commands in your terminal from the root repository:
+
+```bash
+docker build -t raceday-web -f Dockerfile .
+docker run -d -p 8080:8080 --name raceday-web-app raceday-web
