@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Enter Results";
+}
+<div class="container mt-4">
+    <h2>Participant Results Entry</h2>
+    <p class="text-muted">Record finish times and placement positions for participants.</p>
+
+    <div class="card shadow-sm p-4">
+        <form method="post">
+            <div class="mb-3">
+                <label class="form-label">Select Event</label>
+                <select class="form-select">
+                    <option>Spring City Marathon</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Participant Name / Bib</label>
+                <input type="text" class="form-control" placeholder="Participant details" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Finish Time</label>
+                <input type="text" class="form-control" placeholder="00:00:00" />
+            </div>
+            <button type="submit" class="btn btn-primary">Save Result</button>
+        </form>
+    </div>
+</div>

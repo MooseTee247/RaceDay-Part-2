@@ -1,111 +1,46 @@
 using Microsoft.AspNetCore.Mvc;
-using RaceDay.Web.Models;
 
 namespace RaceDay.Web.Controllers
 {
     public class ParticipantController : Controller
     {
-        private readonly IHttpClientFactory _clientFactory;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public ParticipantController(IHttpClientFactory clientFactory)
+        public ParticipantController(IHttpClientFactory httpClientFactory)
         {
-            _clientFactory = clientFactory;
+            _httpClientFactory = httpClientFactory;
         }
 
-        private bool IsParticipant()
+        //Browse and filter events
+        public IActionResult Index(string category)
         {
-            return HttpContext.Session.GetString("UserRole") == "Participant";
+            ViewData["SelectedCategory"] = category;
+            return View();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Index()
+        //Detailed event view with category selection & enrolment
+        public IActionResult Details(int id)
         {
-            if (!IsParticipant()) return RedirectToAction("Login", "Account");
-
-            var client = _clientFactory.CreateClient("RaceDayAPI");
-            var events = await client.GetFromJsonAsync<List<EventDto>>("api/events") ?? new List<EventDto>();
-
-            return View(events);
+            ViewData["EventId"] = id;
+            return View();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Details(int id)
+        // Track enrolment status
+        public IActionResult MyEnrolments()
         {
-            if (!IsParticipant()) return RedirectToAction("Login", "Account");
-
-            var client = _clientFactory.CreateClient("RaceDayAPI");
-            var eventDetail = await client.GetFromJsonAsync<EventDetailDto>($"api/events/{id}");
-
-            if (eventDetail == null) return NotFound();
-
-            return View(eventDetail);
+            return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Enrol(int eventId, int categoryId)
+        // Race history and results
+        public IActionResult RaceHistory()
         {
-            if (!IsParticipant()) return RedirectToAction("Login", "Account");
-
-            var userIdString = HttpContext.Session.GetString("UserId");
-            if (string.IsNullOrEmpty(userIdString)) return RedirectToAction("Login", "Account");
-
-            var client = _clientFactory.CreateClient("RaceDayAPI");
-            var enrolDto = new
-            {
-                ParticipantId = int.Parse(userIdString),
-                EventId = eventId,
-                CategoryId = categoryId
-            };
-
-            var response = await client.PostAsJsonAsync("api/enrolments", enrolDto);
-            if (response.IsSuccessStatusCode)
-            {
-                return RedirectToAction("MyEnrolments");
-            }
-
-            TempData["Error"] = "Failed to enrol for event.";
-            return RedirectToAction("Details", new { id = eventId });
+            return View();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> MyEnrolments()
+        //User profile page 
+        public IActionResult Profile()
         {
-            if (!IsParticipant()) return RedirectToAction("Login", "Account");
-
-            var userIdString = HttpContext.Session.GetString("UserId");
-            var client = _clientFactory.CreateClient("RaceDayAPI");
-            
-            var enrolments = await client.GetFromJsonAsync<List<EnrolmentDto>>($"api/enrolments/participant/{userIdString}") ?? new List<EnrolmentDto>();
-
-            return View(enrolments);
+            return View();
         }
-    }
-
-    public class EventDetailDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-        public DateTime Date { get; set; }
-        public string Location { get; set; } = string.Empty;
-        public string Distance { get; set; } = string.Empty;
-        public string EventType { get; set; } = string.Empty;
-        public string? BannerUrl { get; set; }
-        public List<CategoryDto> Categories { get; set; } = new();
-    }
-
-    public class CategoryDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-    }
-
-    public class EnrolmentDto
-    {
-        public int Id { get; set; }
-        public string EventName { get; set; } = string.Empty;
-        public DateTime EventDate { get; set; }
-        public string CategoryName { get; set; } = string.Empty;
-        public string Status { get; set; } = string.Empty; // Confirmed, Pending, etc.
     }
 }
